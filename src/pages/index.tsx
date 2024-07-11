@@ -14,9 +14,17 @@ const Home = () => {
       <div>
         <h1>Welcome to My Next.js Template</h1>
         <p>This is the home page</p>
-        <Link href="/">
-          Gp back to Home
-        </Link>  
+        <Link href="/about">
+          About Page
+        </Link>
+        <br />
+        <Link href="/post/1">
+          Post 1
+        </Link>
+        <br />
+        <Link href="/post/2">
+          Post 2
+        </Link>
       </div>
     </Container>
   );
