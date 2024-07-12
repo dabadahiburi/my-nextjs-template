@@ -1,7 +1,8 @@
 // pages/index.js
-import React from 'react';
+import React,{useContext,useEffect} from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { PostContext } from '../context/PostContext';
 
 const Container = styled.div`
   padding: 20px;
@@ -9,24 +10,31 @@ const Container = styled.div`
 `;
 
 const Home = () => {
+  const { state, dispatch } = useContext(PostContext);
+  
+  useEffect(() => {
+    const fetchPost = async () => {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+      const data = await res.json();
+      dispatch({ type: 'SET_POSTS', payload: data });
+    };
+
+    fetchPost();
+  }, [dispatch]);
   return (
-    <Container>
-      <div>
-        <h1>Welcome to My Next.js Template</h1>
-        <p>This is the home page</p>
-        <Link href="/about">
-          About Page
-        </Link>
-        <br />
-        <Link href="/post/1">
-          Post 1
-        </Link>
-        <br />
-        <Link href="/post/2">
-          Post 2
-        </Link>
-      </div>
-    </Container>
+    <div>
+      <h1>Welcome to My Next.js Template</h1>
+      <p>This is the home page</p>
+      <ul>
+        {state.posts.map((post) => (
+          <li key={post.id}>
+            <Link href={`/post/${post.id}`}>
+              <p>{post.title}</p>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
