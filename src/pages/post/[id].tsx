@@ -1,15 +1,10 @@
+import { PostContext } from '@/context/PostContext';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
-
-interface Post{
-  id: number;
-  title: string;
-  body: string;
-}
+import React, {useContext,useEffect}from 'react';
 
 interface PostProps{
-  post: Post | null;
+  post: { id: number; title: string; body: string } | null;
 }
 
 // const Post = ({ post }) => {
@@ -28,9 +23,15 @@ interface PostProps{
 
 const Post: React.FC<PostProps> = ({ post }) => {
   const router = useRouter();
-
+  const { state, dispatch } = useContext(PostContext);
   console.log('router:', router);
   console.log('post:', post);
+
+  useEffect(() => {
+    if (post) {
+      dispatch({ type: 'ADD_POST', payload: post });
+    }
+  }, [post, dispatch]);
 
   if (router.isFallback) {
     return <div>Loading...</div>
@@ -71,12 +72,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
     const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-    const posts: Post[] = await res.json();
+    const posts = await res.json();
     
     //デバック用
     console.log('posts:', posts);
 
-    const paths = posts.map((post) => ({
+    const paths = posts.map((post:{id: number}) => ({
       params: { id: post.id.toString() },
     }));
 
@@ -104,20 +105,23 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       console.error('Failed to fetch post:', res.statusText);
       return { props: { post: null } };
     }
-    const post: Post = await res.json();
+    const post = await res.json();
     
     // デバッグ用ログ
     console.log('fetched post:', post);
 
     return {
-      props: { post },
-      };
+        props: {
+          post: post || null,
+        },
+    };
+    
   } catch (error) {
     console.error('Error fetching post:', error);
     return {
       props: { post: null },
     };
-  }
+  };
 };
 
 export default Post;
