@@ -1,7 +1,7 @@
 // pages/404.js or pages/404.tsx
 import React from 'react';
 
-const Custom404 = () => {
+const Custom404: React.FC = () => {
   return (
     <div>
       <h1>404 - Page Not Found</h1>
