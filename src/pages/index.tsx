@@ -9,6 +9,8 @@ const Container = styled.div`
   text-align: center;
 `;
 
+
+
 const Home = () => {
   const { state, dispatch } = useContext(PostContext);
   const [ title, setTitle ] = useState('');
@@ -38,6 +40,7 @@ const Home = () => {
     <div>
       <h1>Welcome to My Next.js Template</h1>
       <p>This is the home page</p>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -60,9 +63,11 @@ const Home = () => {
             <Link href={`/post/${post.id}`}>
               <p>{post.title}</p>
             </Link>
+            <p>{post.body}</p>
           </li>
         ))}
       </ul>
+      
     </div>
   );
 };

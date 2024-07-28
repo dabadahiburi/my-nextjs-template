@@ -8,9 +8,9 @@ export default async function handler(req: NextApiRequest,res: NextApiResponse) 
     const posts = await prisma.post.findMany();
     res.status(200).json(posts);
   } else if (req.method === 'POST') {
-    const { title, body } = req.body;
+    const { title, body,authorId } = req.body;
     const newPost = await prisma.post.create({
-      data: { title, body },
+      data: { title, body,authorId },
     });
     res.status(201).json(newPost);
   } else {
